@@ -1,6 +1,6 @@
 ﻿#ifndef MYTINYSTL_ASTRING_H_
 #define MYTINYSTL_ASTRING_H_
-
+//
 // 定义了 string, wstring, u16string, u32string 类型
 
 #include "basic_string.h"
