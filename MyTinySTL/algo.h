@@ -138,6 +138,7 @@ find_if_not(InputIter first, InputIter last, UnaryPredicate unary_pred)
 /*****************************************************************************************/
 // search
 // 在[first1, last1)中查找[first2, last2)的首次出现点
+// 时间负责度：O(N+M)
 /*****************************************************************************************/
 template <class ForwardIter1, class ForwardIter2>
 ForwardIter1

@@ -36,7 +36,7 @@ namespace mystl
 #undef min
 #endif // min
 
-// 模板类: vector 
+// 模板类: vector
 // 模板参数 T 代表类型
 template <class T>
 class vector
@@ -75,6 +75,7 @@ public:
   explicit vector(size_type n)
   { fill_init(n, value_type()); }
 
+  // 拷贝够照函数 参数注意：const + & 为了防止递归拷贝的问题
   vector(size_type n, const value_type& value)
   { fill_init(n, value); }
 
@@ -85,7 +86,8 @@ public:
     MYSTL_DEBUG(!(last < first));
     range_init(first, last);
   }
-
+  
+  // 拷贝够照函数 参数注意：const + & 为了防止递归拷贝的问题
   vector(const vector& rhs)
   {
     range_init(rhs.begin_, rhs.end_);
@@ -117,7 +119,7 @@ public:
   }
 
   ~vector()
-  { 
+  {
     destroy_and_recover(begin_, end_, cap_ - begin_);
     begin_ = end_ = cap_ = nullptr;
   }
@@ -125,25 +127,25 @@ public:
 public:
 
   // 迭代器相关操作
-  iterator               begin()         noexcept 
+  iterator               begin()         noexcept
   { return begin_; }
   const_iterator         begin()   const noexcept
   { return begin_; }
   iterator               end()           noexcept
   { return end_; }
-  const_iterator         end()     const noexcept 
+  const_iterator         end()     const noexcept
   { return end_; }
 
-  reverse_iterator       rbegin()        noexcept 
+  reverse_iterator       rbegin()        noexcept
   { return reverse_iterator(end()); }
   const_reverse_iterator rbegin()  const noexcept
   { return const_reverse_iterator(end()); }
   reverse_iterator       rend()          noexcept
   { return reverse_iterator(begin()); }
-  const_reverse_iterator rend()    const noexcept 
+  const_reverse_iterator rend()    const noexcept
   { return const_reverse_iterator(begin()); }
 
-  const_iterator         cbegin()  const noexcept 
+  const_iterator         cbegin()  const noexcept
   { return begin(); }
   const_iterator         cend()    const noexcept
   { return end(); }
@@ -270,6 +272,7 @@ public:
   void     clear() { erase(begin(), end()); }
 
   // resize / reverse
+  // 创建 size 个存储的 vector，默认值是 value_type()
   void     resize(size_type new_size) { return resize(new_size, value_type()); }
   void     resize(size_type new_size, const value_type& value);
 
@@ -332,7 +335,7 @@ vector<T>& vector<T>::operator=(const vector& rhs)
   {
     const auto len = rhs.size();
     if (len > capacity())
-    { 
+    {
       vector tmp(rhs.begin(), rhs.end());
       swap(tmp);
     }
@@ -343,7 +346,7 @@ vector<T>& vector<T>::operator=(const vector& rhs)
       end_ = begin_ + len;
     }
     else
-    { 
+    {
       mystl::copy(rhs.begin(), rhs.begin() + size(), begin_);
       mystl::uninitialized_copy(rhs.begin() + size(), rhs.end(), end_);
       cap_ = end_ = begin_ + len;
@@ -367,6 +370,7 @@ vector<T>& vector<T>::operator=(vector&& rhs) noexcept
 }
 
 // 预留空间大小，当原容量小于要求大小时，才会重新分配
+// 申请预留存储空间，注意：新增加的存储空间没有存储原始
 template <class T>
 void vector<T>::reserve(size_type n)
 {
@@ -379,7 +383,9 @@ void vector<T>::reserve(size_type n)
     mystl::uninitialized_move(begin_, end_, tmp);
     data_allocator::deallocate(begin_, cap_ - begin_);
     begin_ = tmp;
+    // end 还是老的位置
     end_ = tmp + old_size;
+    // cap 更改为新的预留大小 n
     cap_ = begin_ + n;
   }
 }
@@ -519,6 +525,8 @@ vector<T>::erase(const_iterator first, const_iterator last)
 }
 
 // 重置容器大小
+// 默认存储的值是 value
+// 高于存储的删除，不足的添加，添加的原始默认值是 value
 template <class T>
 void vector<T>::resize(size_type new_size, const value_type& value)
 {
@@ -617,7 +625,7 @@ destroy_and_recover(iterator first, iterator last, size_type n)
 
 // get_new_cap 函数
 template <class T>
-typename vector<T>::size_type 
+typename vector<T>::size_type
 vector<T>::
 get_new_cap(size_type add_size)
 {
@@ -760,7 +768,7 @@ void vector<T>::reallocate_insert(iterator pos, const value_type& value)
 
 // fill_insert 函数
 template <class T>
-typename vector<T>::iterator 
+typename vector<T>::iterator
 vector<T>::
 fill_insert(iterator pos, size_type n, const value_type& value)
 {
@@ -929,4 +937,3 @@ void swap(vector<T>& lhs, vector<T>& rhs)
 
 } // namespace mystl
 #endif // !MYTINYSTL_VECTOR_H_
-

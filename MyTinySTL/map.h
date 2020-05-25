@@ -30,7 +30,7 @@ public:
   typedef mystl::pair<const Key, T>  value_type;
   typedef Compare                    key_compare;
 
-  // 定义一个 functor，用来进行元素比较
+  // 定义一个 functoion，用来进行元素比较
   class value_compare : public binary_function <value_type, value_type, bool>
   {
     friend class map<Key, T, Compare>;
@@ -74,12 +74,12 @@ public:
     :tree_()
   { tree_.insert_unique(first, last); }
 
-  map(std::initializer_list<value_type> ilist) 
+  map(std::initializer_list<value_type> ilist)
     :tree_()
   { tree_.insert_unique(ilist.begin(), ilist.end()); }
-
-  map(const map& rhs) 
-    :tree_(rhs.tree_) 
+// 拷贝构造函数
+  map(const map& rhs)
+    :tree_(rhs.tree_)
   {
   }
   map(map&& rhs) noexcept
@@ -88,12 +88,12 @@ public:
   }
 
   map& operator=(const map& rhs)
-  { 
-    tree_ = rhs.tree_; 
+  {
+    tree_ = rhs.tree_;
     return *this;
   }
   map& operator=(map&& rhs)
-  { 
+  {
     tree_ = mystl::move(rhs.tree_);
     return *this;
   }
@@ -240,11 +240,11 @@ public:
   const_iterator upper_bound(const key_type& key) const { return tree_.upper_bound(key); }
 
   pair<iterator, iterator>
-    equal_range(const key_type& key) 
+    equal_range(const key_type& key)
   { return tree_.equal_range_unique(key); }
 
   pair<const_iterator, const_iterator>
-    equal_range(const key_type& key) const 
+    equal_range(const key_type& key) const
   { return tree_.equal_range_unique(key); }
 
   void           swap(map& rhs) noexcept
@@ -353,11 +353,11 @@ public:
   multimap() = default;
 
   template <class InputIterator>
-  multimap(InputIterator first, InputIterator last) 
-    :tree_() 
+  multimap(InputIterator first, InputIterator last)
+    :tree_()
   { tree_.insert_multi(first, last); }
-  multimap(std::initializer_list<value_type> ilist) 
-    :tree_() 
+  multimap(std::initializer_list<value_type> ilist)
+    :tree_()
   { tree_.insert_multi(ilist.begin(), ilist.end()); }
 
   multimap(const multimap& rhs)
@@ -369,15 +369,15 @@ public:
   {
   }
 
-  multimap& operator=(const multimap& rhs) 
-  { 
-    tree_ = rhs.tree_; 
-    return *this; 
+  multimap& operator=(const multimap& rhs)
+  {
+    tree_ = rhs.tree_;
+    return *this;
   }
-  multimap& operator=(multimap&& rhs) 
-  { 
+  multimap& operator=(multimap&& rhs)
+  {
     tree_ = mystl::move(rhs.tree_);
-    return *this; 
+    return *this;
   }
 
   multimap& operator=(std::initializer_list<value_type> ilist)
@@ -484,12 +484,12 @@ public:
   iterator       upper_bound(const key_type& key)       { return tree_.upper_bound(key); }
   const_iterator upper_bound(const key_type& key) const { return tree_.upper_bound(key); }
 
-  pair<iterator, iterator> 
+  pair<iterator, iterator>
     equal_range(const key_type& key)
   { return tree_.equal_range_multi(key); }
 
   pair<const_iterator, const_iterator>
-    equal_range(const key_type& key) const 
+    equal_range(const key_type& key) const
   { return tree_.equal_range_multi(key); }
 
   void swap(multimap& rhs) noexcept
@@ -546,4 +546,3 @@ void swap(multimap<Key, T, Compare>& lhs, multimap<Key, T, Compare>& rhs) noexce
 
 } // namespace mystl
 #endif // !MYTINYSTL_MAP_H_
-
